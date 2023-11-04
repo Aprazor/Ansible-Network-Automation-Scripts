@@ -1,0 +1,19 @@
+---
+- name: Update VLAN Configuration
+  hosts: cisco_switch
+  gather_facts: no
+
+  vars:
+    username: sam
+    password: sam@123
+    timeout: 100
+
+
+  tasks:
+    - name: vlan Configuration
+      ios_config:
+        provider: "{{cli}}"
+        authorize: yes
+        lines:
+          - vlan 20
+          - name production_VLAN

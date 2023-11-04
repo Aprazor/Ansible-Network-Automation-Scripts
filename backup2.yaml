@@ -1,0 +1,16 @@
+- name : backup cisco device to config 
+  hosts: S1
+  gather_facts: false
+
+  tasks:
+  - name: copy running config 
+    ios_command:
+      commands: 
+        - show running-config
+
+    register: running_output
+
+  - name: coping to file 
+    copy:
+    content: "{{ running_output.stdout_lines }}"
+    dest: "/path/to/backup/{{inventory_hostname}}.cfg"

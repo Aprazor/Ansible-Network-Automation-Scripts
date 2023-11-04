@@ -1,0 +1,22 @@
+- name: Running ospf on routers
+  host: R1
+  gather_facts: false
+
+  vars:
+    cli:
+      username: sam
+      password: sam@123
+      timeout: 100
+
+  tasks:
+    - name: Configuration of OSPF
+      ios_config:
+        provider: {{cli}}
+        authorize: yes
+        parents: ospf router 1
+        lines: 
+          - network 0.0.0.0 255.255.255.255 area 0
+
+      register: print_output
+    - debug: var= print_output
+        

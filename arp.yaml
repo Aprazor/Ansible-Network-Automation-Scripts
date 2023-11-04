@@ -1,0 +1,11 @@
+- name : Get ARP information
+  host: R1
+  gather_facts: false
+
+  tasks:
+    - name: Run Show ARP 
+      raw: "Show arp"
+    
+      register: print_output
+      -debug: 
+      var: print_output.stdout_lines

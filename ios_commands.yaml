@@ -1,0 +1,17 @@
+- name: Getting information through ios command 
+  host: R1
+  gather_facts: false
+  
+  tasks:
+  - name: Running ios commands
+    ios_command:
+      commands:
+        - show ip interface brief
+        - show version 
+
+    register: print_output
+  - debug: var=print_output.stdout_lines
+
+  - name: sage to output file
+    copy: content="{{print_output.stdout[0]}}" des="./output/{{inventroy_hostname}}.txt"
+    

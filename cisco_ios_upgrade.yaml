@@ -1,0 +1,30 @@
+- name: upgrade cisco ios
+  hosts: R1, R2
+  gather_facts: false 
+
+  vars: 
+    cli:
+      username: sam
+      password: sam@123
+      timeout: 100
+
+  tasks:
+    - name: copying ios to flash
+      ios_config:
+        authorize: yes
+        provider: "{{cli}}"
+        lines:
+            - copy tftp://10.0.0.1/cisco-ios-image.bin flash:
+      
+    - name: booting up with new upgrade
+      ios_config:
+        provider: "{{cli}}"
+          lines::
+            - boot system flash:cisco-ios-image.bin
+  
+    - name: reload device
+      ios_command:
+        provider: "{{cli}}"
+          commands:
+            - reload
+

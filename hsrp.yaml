@@ -1,0 +1,37 @@
+- name: Hot Standby Routing Protocol
+  hosts: R1
+  gather_facts: no
+
+  vars:
+    cli:
+      username: sam
+      password: sam@123
+      timeout: 100
+
+  tasks:
+    - name: Configure HSRP
+      ios_config:
+        provider: "{{ cli }}"
+        authorize: yes
+        lines:
+          - "interface GigabitEthernet0/0"
+          - "standby version 2"
+          - "standby 1 ip 172.16.0.254"
+          - "standby 1 priority {{ item.priority }}"
+          - "standby 1 preempt"
+        with_items:
+          - { priority: 100 }
+          - { priority: 50 }
+      register: config_output
+
+    - name: Configure HSRP Preempt on Router 1
+      ios_config:
+        provider: "{{ cli }}"
+        authorize: yes
+        lines:
+          - "interface GigabitEthernet0/0"
+          - "standby 1 preempt"
+      delegate_to: R1
+
+    - debug:
+        var: config_output.stdout_lines

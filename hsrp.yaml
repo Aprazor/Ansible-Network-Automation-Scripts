@@ -22,16 +22,16 @@
         with_items:
           - { priority: 100 }
           - { priority: 50 }
-      register: config_output
 
-    - name: Configure HSRP Preempt on Router 1
-      ios_config:
+    - name: Show HSRP Status
+      ios_command:
         provider: "{{ cli }}"
-        authorize: yes
-        lines:
-          - "interface GigabitEthernet0/0"
-          - "standby 1 preempt"
-      delegate_to: R1
+        commands:
+          - "show standby"
+      register: hsrp_status
 
     - debug:
         var: config_output.stdout_lines
+
+    - debug:
+        var: hsrp_status.stdout_lines
